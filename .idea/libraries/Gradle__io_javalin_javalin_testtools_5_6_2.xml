@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.javalin:javalin-testtools:5.6.2" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.javalin" artifactId="javalin-testtools" version="5.6.2" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.javalin/javalin-testtools/5.6.2/8510c32e111be71e7807838b44bf4715299f89c6/javalin-testtools-5.6.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.javalin/javalin-testtools/5.6.2/453327c5c3a96d8ee1931fe5a3ced8dda6850acb/javalin-testtools-5.6.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

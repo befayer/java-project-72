@@ -1,0 +1,27 @@
+---
+
+version: "3"
+
+services:
+  db:
+    image: postgres:13.4-alpine
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    volumes:
+      - .:/project
+    command: make test lint
+    depends_on:
+      - db
+    environment:
+      JDBC_DATABASE_URL: jdbc:postgresql://db:5432/postgres?password=password&user=postgres
+      JDBC_DATABASE_USERNAME: postgres
+      JDBC_DATABASE_PASSWORD: password
+      JDBC_DATABASE_NAME: postgres
+
+volumes:
+  pgdata:
