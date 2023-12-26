@@ -33,7 +33,17 @@ public final class App {
 
     // Метод для получения URL базы данных из переменной окружения
     private static String getDatabaseUrl() {
-        return System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project");
+        return System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project");//TODO
+    }
+
+    // Метод для получения пароля для доступа к базе данных из переменной окружения
+    private static String getDatabasePassword() {
+        return System.getenv("JDBC_DATABASE_PASSWORD");
+    }
+
+    // Метод для получения username для доступа к базе данных из переменной окружения
+    private static String getDatabaseUsername() {
+        return System.getenv("JDBC_DATABASE_USERNAME");
     }
 
     // Метод для инициализации Javalin приложения
@@ -41,7 +51,11 @@ public final class App {
 
         // Конфигурация Hikari для работы с базой данных
         HikariConfig hikariConfig = new HikariConfig();
+
+        //TODO
         hikariConfig.setJdbcUrl(getDatabaseUrl());
+        hikariConfig.setPassword(getDatabasePassword());
+        hikariConfig.setUsername(getDatabaseUsername());
 
         //инициализация источника данных Hikari
         HikariDataSource dataSource = new HikariDataSource(hikariConfig);
