@@ -4,11 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Statement;
 import java.util.stream.Collectors;
 
