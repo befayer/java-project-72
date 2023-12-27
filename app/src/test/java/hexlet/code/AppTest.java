@@ -76,26 +76,20 @@ class AppTest {
         @Test
         void testStore() {
             String url = mockServer.url("/").toString().replaceAll("/$", "");
-
             JavalinTest.test(app, (server, client) -> {
                 var requestBody = "url=" + url;
                 assertThat(client.post("/urls", requestBody).code()).isEqualTo(200);
 
                 var actualUrl = UrlsRepository.findByName(url).orElse(null);
-
                 assertThat(actualUrl).isNotNull();
                 assertThat(actualUrl.getName()).isEqualTo(url);
-
                 client.post("/urls/" + actualUrl.getId() + "/checks");
-
                 var responce = client.get("/urls/" + actualUrl.getId());
                 assertThat(responce.code()).isEqualTo(200);
                 assert responce.body() != null;
                 assertThat(responce.body().string()).contains(url);
-
                 var actualCheckUrl = UrlChecksRepository
                         .findLatestChecks().get(actualUrl.getId());
-
                 assertThat(actualCheckUrl).isNotNull();
                 assertThat(actualCheckUrl.getStatusCode()).isEqualTo(200);
                 assertThat(actualCheckUrl.getTitle()).isEqualTo("Test page");
@@ -131,15 +125,12 @@ class AppTest {
         @Test
         void testStore() throws SQLException {
             String inputUrl = "https://ru.hexlet.io";
-
             JavalinTest.test(app, (server, client) -> {
                 var requestBody = "url=" + inputUrl;
                 var response = client.post("/urls", requestBody);
                 assertThat(response.code()).isEqualTo(200);
             });
-
             Url url = UrlsRepository.findByName(inputUrl).orElse(null);
-
             assertThat(url).isNotNull();
             assertThat(url.getName()).isEqualTo(inputUrl);
         }
