@@ -26,6 +26,11 @@ import hexlet.code.controller.UrlsController;
 @Slf4j
 public final class App {
 
+    public static void main(String[] args) throws SQLException, IOException {
+        Javalin app = getApp();
+        app.start(getPort());
+    }
+
     // Метод для получения порта приложения из переменной окружения
     private static int getPort() {
         String port = System.getenv().getOrDefault("PORT", "3000");
@@ -52,7 +57,7 @@ public final class App {
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(getDatabaseUrl());
         HikariDataSource dataSource = new HikariDataSource(hikariConfig);
-        String sql = readResourceFile("schema.sql");
+        String sql = readResourceFile();
         log.info(sql);
 
         try (Connection connection = dataSource.getConnection();
@@ -87,23 +92,15 @@ public final class App {
     private static TemplateEngine createTemplateEngine() {
         ClassLoader classLoader = App.class.getClassLoader();
         ResourceCodeResolver codeResolver = new ResourceCodeResolver("templates", classLoader);
-        TemplateEngine templateEngine = TemplateEngine.create(codeResolver, ContentType.Html);
-        return templateEngine;
+        return TemplateEngine.create(codeResolver, ContentType.Html);
     }
 
-    private static String readResourceFile(String fileName) throws IOException {
-        var inputStream = App.class.getClassLoader().getResourceAsStream(fileName);
+    private static String readResourceFile() throws IOException {
+        var inputStream = App.class.getClassLoader().getResourceAsStream("schema.sql");
+        assert inputStream != null;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             return reader.lines().collect(Collectors.joining("\n"));
         }
 
-    }
-
-
-    // Основной метод, запускающий приложение
-    public static void main(String[] args) throws SQLException, IOException {
-        // Получение и запуск Javalin приложения
-        Javalin app = getApp();
-        app.start(getPort());
     }
 }

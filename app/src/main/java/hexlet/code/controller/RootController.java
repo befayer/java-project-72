@@ -9,7 +9,6 @@ public final class RootController {
 
     public static void welcome(Context ctx) {
         MainPage page = new MainPage();
-
         page.setFlash(ctx.consumeSessionAttribute("flash"));
         page.setFlashType(ctx.consumeSessionAttribute("flash-type"));
         ctx.render("index.jte", Collections.singletonMap("page", page));

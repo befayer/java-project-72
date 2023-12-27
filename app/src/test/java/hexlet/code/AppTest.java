@@ -26,39 +26,41 @@ class AppTest {
     private static Javalin app;
     private static MockWebServer mockServer;
 
-    private static Path getFixturePath(String fileName) {
-        return Paths.get("src", "test", "resources", "fixtures", fileName)
-                .toAbsolutePath().normalize();
-    }
-
-    private static String readFixture(String fileName) throws IOException {
-        Path filePath = getFixturePath(fileName);
-        return Files.readString(filePath).trim();
-    }
-
-    @BeforeAll
-    public static void beforeAll() throws IOException {
-        mockServer = new MockWebServer();
-        MockResponse mockedResponse = new MockResponse()
-                .setBody(readFixture("index.html"));
-        mockServer.enqueue(mockedResponse);
-        mockServer.start();
-    }
-
-    @AfterAll
-    public static void afterAll() throws IOException {
-        mockServer.shutdown();
-    }
-
     @BeforeEach
     void setUp() throws SQLException, IOException {
         app = App.getApp();
     }
 
+    private static Path getFixturePath() {
+        return Paths.get("src", "test", "resources", "fixtures", "index.html")
+                .toAbsolutePath().normalize();
+    }
 
+    private static String readFixture() throws IOException {
+        Path filePath = getFixturePath();
+        return Files.readString(filePath).trim();
+    }
+
+    // инициализация мок-сервера перед запуском всех тестов
+    @BeforeAll
+    public static void beforeAll() throws IOException {
+        mockServer = new MockWebServer();
+        MockResponse mockedResponse = new MockResponse()
+                .setBody(readFixture());
+        mockServer.enqueue(mockedResponse);
+        mockServer.start();
+    }
+
+    // Завершение работы мок-сервера после завершения всех тестов
+    @AfterAll
+    public static void afterAll() throws IOException {
+        mockServer.shutdown();
+    }
+
+    // Вложенный класс для тестирования корневого URL
     @Nested
     class RootTest {
-
+        // Тест проверки кода ответа при запросе к корневому URL
         @Test
         void testIndex() {
             JavalinTest.test(app, (server, client) -> {
@@ -67,48 +69,12 @@ class AppTest {
         }
     }
 
-    @Nested
-    class UrlTest {
-
-        @Test
-        void testIndex() {
-            JavalinTest.test(app, (server, client) -> {
-                assertThat(client.get("/urls").code()).isEqualTo(200);
-            });
-        }
-
-        @Test
-        void testShow() throws SQLException {
-            var url = new Url("http://test.io");
-            UrlsRepository.save(url);
-            JavalinTest.test(app, (server, client) -> {
-                var responce = client.get("/urls/" + url.getId());
-                assertThat(responce.code()).isEqualTo(200);
-            });
-        }
-
-        @Test
-        void testStore() throws SQLException {
-            String inputUrl = "https://ru.hexlet.io";
-
-            JavalinTest.test(app, (server, client) -> {
-                var requestBody = "url=" + inputUrl;
-                var response = client.post("/urls", requestBody);
-                assertThat(response.code()).isEqualTo(200);
-            });
-
-            Url actualUrl = UrlsRepository.findByName(inputUrl).orElse(null);
-
-            assertThat(actualUrl).isNotNull();
-            assertThat(actualUrl.getName()).isEqualTo(inputUrl);
-        }
-    }
-
+    // Вложенный класс для тестирования проверки URL
     @Nested
     class UrlCheckTest {
 
         @Test
-        void testStore() throws SQLException {
+        void testStore() {
             String url = mockServer.url("/").toString().replaceAll("/$", "");
 
             JavalinTest.test(app, (server, client) -> {
@@ -124,6 +90,7 @@ class AppTest {
 
                 var responce = client.get("/urls/" + actualUrl.getId());
                 assertThat(responce.code()).isEqualTo(200);
+                assert responce.body() != null;
                 assertThat(responce.body().string()).contains(url);
 
                 var actualCheckUrl = UrlChecksRepository
@@ -135,6 +102,46 @@ class AppTest {
                 assertThat(actualCheckUrl.getH1()).isEqualTo("Do not expect a miracle, miracles yourself!");
                 assertThat(actualCheckUrl.getDescription()).contains("statements of great people");
             });
+        }
+    }
+
+    // Вложенный класс для тестирования URL
+    @Nested
+    class UrlTest {
+        // Тест проверки кода ответа при запросе к URL "/urls"
+        @Test
+        void testIndex() {
+            JavalinTest.test(app, (server, client) -> {
+                assertThat(client.get("/urls").code()).isEqualTo(200);
+            });
+        }
+
+        // Тест проверки кода ответа и сохранения URL в репозитории
+        @Test
+        void testShow() throws SQLException {
+            var url = new Url("http://test.io");
+            UrlsRepository.save(url);
+            JavalinTest.test(app, (server, client) -> {
+                var responce = client.get("/urls/" + url.getId());
+                assertThat(responce.code()).isEqualTo(200);
+            });
+        }
+
+        // Тест проверки кода ответа и сохранения нового URL в репозитории
+        @Test
+        void testStore() throws SQLException {
+            String inputUrl = "https://ru.hexlet.io";
+
+            JavalinTest.test(app, (server, client) -> {
+                var requestBody = "url=" + inputUrl;
+                var response = client.post("/urls", requestBody);
+                assertThat(response.code()).isEqualTo(200);
+            });
+
+            Url url = UrlsRepository.findByName(inputUrl).orElse(null);
+
+            assertThat(url).isNotNull();
+            assertThat(url.getName()).isEqualTo(inputUrl);
         }
     }
 }

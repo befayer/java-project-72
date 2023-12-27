@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="hexlet.code.AppTest$RootTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-12-27T17:37:35" hostname="KALININAA-LAP" time="0.654">
+<testsuite name="hexlet.code.AppTest$RootTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-12-27T18:09:00" hostname="KALININAA-LAP" time="0.803">
   <properties/>
-  <testcase name="testIndex()" classname="hexlet.code.AppTest$RootTest" time="0.654"/>
+  <testcase name="testIndex()" classname="hexlet.code.AppTest$RootTest" time="0.803"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[[Test worker] INFO com.zaxxer.hikari.HikariDataSource - HikariPool-5 - Starting...
 [Test worker] INFO com.zaxxer.hikari.pool.HikariPool - HikariPool-5 - Added connection conn40: url=jdbc:h2:mem:project user=

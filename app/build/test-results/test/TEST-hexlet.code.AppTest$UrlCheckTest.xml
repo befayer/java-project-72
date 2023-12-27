@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="hexlet.code.AppTest$UrlCheckTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-12-27T17:37:27" hostname="KALININAA-LAP" time="5.405">
+<testsuite name="hexlet.code.AppTest$UrlCheckTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-12-27T18:08:58" hostname="KALININAA-LAP" time="2.255">
   <properties/>
-  <testcase name="testStore()" classname="hexlet.code.AppTest$UrlCheckTest" time="5.405"/>
+  <testcase name="testStore()" classname="hexlet.code.AppTest$UrlCheckTest" time="2.255"/>
   <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[SLF4J: Class path contains multiple SLF4J providers.
-SLF4J: Found provider [org.slf4j.simple.SimpleServiceProvider@4e08acf9]
-SLF4J: Found provider [ch.qos.logback.classic.spi.LogbackServiceProvider@42ea287]
-SLF4J: See https://www.slf4j.org/codes.html#multiple_bindings for an explanation.
-SLF4J: Actual provider is of type [org.slf4j.simple.SimpleServiceProvider@4e08acf9]
-[Test worker] INFO com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
-[Test worker] INFO com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:project user=
-[Test worker] INFO com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+  <system-err><![CDATA[[Test worker] INFO com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Starting...
+[Test worker] INFO com.zaxxer.hikari.pool.HikariPool - HikariPool-4 - Added connection conn30: url=jdbc:h2:mem:project user=
+[Test worker] INFO com.zaxxer.hikari.HikariDataSource - HikariPool-4 - Start completed.
 [Test worker] INFO hexlet.code.App - DROP TABLE IF EXISTS url_checks;
 DROP TABLE IF EXISTS urls;
 
