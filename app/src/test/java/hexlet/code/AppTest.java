@@ -21,7 +21,7 @@ import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AppTest {
+class AppTest {
 
     private static Javalin app;
     private static MockWebServer mockServer;
