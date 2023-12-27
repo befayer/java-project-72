@@ -1,12 +1,16 @@
 package hexlet.code;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Statement;
+import java.util.stream.Collectors;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -91,9 +95,13 @@ public final class App {
     }
 
     private static String readResourceFile(String fileName) throws IOException {
-        Path path = Paths.get("app", "src", "main", "resources", fileName);
-        return Files.readString(path);
+        var inputStream = App.class.getClassLoader().getResourceAsStream(fileName);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+            return reader.lines().collect(Collectors.joining("\n"));
+        }
+
     }
+
 
     // Основной метод, запускающий приложение
     public static void main(String[] args) throws SQLException, IOException {

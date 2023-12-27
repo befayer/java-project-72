@@ -4,6 +4,7 @@ plugins {
     id("io.freefair.lombok") version "8.2.2"
     id("com.github.ben-manes.versions") version "0.47.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id 'jacoco'
 }
 
 group = 'hexlet.code'
@@ -39,4 +40,19 @@ dependencies {
 
 checkstyle {
     toolVersion = "10.3.3"
+}
+
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'FAILED', 'PASSED', 'SKIPPED'
+        showStandardStreams = true
+    }
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(true)
+    }
 }
