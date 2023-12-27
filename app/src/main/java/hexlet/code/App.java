@@ -27,13 +27,13 @@ public final class App {
 
     // Метод для получения порта приложения из переменной окружения
     private static int getPort() {
-        String port = System.getenv().getOrDefault("PORT", "3000");
+        String port = System.getenv().getOrDefault("PORT", "7070");
         return Integer.parseInt(port);
     }
 
     // Метод для получения URL базы данных из переменной окружения
     private static String getDatabaseUrl() {
-        return System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project");//TODO
+        return System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project");
     }
 
     // Метод для получения пароля для доступа к базе данных из переменной окружения
@@ -48,25 +48,12 @@ public final class App {
 
     // Метод для инициализации Javalin приложения
     public static Javalin getApp() throws IOException, SQLException {
-
-        // Конфигурация Hikari для работы с базой данных
         HikariConfig hikariConfig = new HikariConfig();
-
-        //TODO
         hikariConfig.setJdbcUrl(getDatabaseUrl());
-        hikariConfig.setPassword(getDatabasePassword());
-        hikariConfig.setUsername(getDatabaseUsername());
-
-        //инициализация источника данных Hikari
         HikariDataSource dataSource = new HikariDataSource(hikariConfig);
-
-        // Чтение содержимого файла schema.sql
         String sql = readResourceFile("schema.sql");
-
-        // Логирование SQL-запроса
         log.info(sql);
 
-        // Выполнение SQL-запроса для создания таблицы в базе данных
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute(sql);
@@ -75,7 +62,6 @@ public final class App {
         // Установка источника данных в репозитории
         BaseRepository.dataSource = dataSource;
 
-        // Создание Javalin приложения
         Javalin app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
         });
@@ -88,13 +74,11 @@ public final class App {
         //инициализация JavalinJte для работы с шаблонами
         JavalinJte.init(createTemplateEngine());
 
-        // Определение маршрутов и их обработчиков
         app.get("/", RootController::welcome);
         app.get(NamedRoutes.urlsPath(), UrlsController::listUrls);
         app.post(NamedRoutes.urlsPath(), UrlsController::createUrl);
         app.get(NamedRoutes.urlPath("{id}"), UrlsController::showUrl);
         app.post(NamedRoutes.urlChecksPath("{id}"), UrlsController::checkUrl);
-
         return app;
     }
 
@@ -106,7 +90,6 @@ public final class App {
         return templateEngine;
     }
 
-    // Метод для чтения содержимого файла из ресурсов
     private static String readResourceFile(String fileName) throws IOException {
         Path path = Paths.get("app", "src", "main", "resources", fileName);
         return Files.readString(path);

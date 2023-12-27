@@ -1,6 +1,6 @@
 package hexlet.code;
 
-import hexlet.code.entity.*;
+import hexlet.code.entity.Url;
 import hexlet.code.repository.UrlChecksRepository;
 import hexlet.code.repository.UrlsRepository;
 import io.javalin.Javalin;
@@ -79,7 +79,7 @@ class AppTest {
 
         @Test
         void testShow() throws SQLException {
-            Url url = new Url("http://test.io");
+            var url = new Url("http://test.io");
             UrlsRepository.save(url);
             JavalinTest.test(app, (server, client) -> {
                 var responce = client.get("/urls/" + url.getId());

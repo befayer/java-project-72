@@ -11,10 +11,10 @@ import java.util.Map;
 public class UrlChecksRepository extends BaseRepository {
     public static void save(UrlCheck check) throws SQLException {
         String sql = "INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at)"
-            + "VALUES (?, ?, ?, ?, ?, ?)";
+                + "VALUES (?, ?, ?, ?, ?, ?)";
         Timestamp datetime = new Timestamp(System.currentTimeMillis());
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setLong(1, check.getUrlId());
             preparedStatement.setInt(2, check.getStatusCode());
             preparedStatement.setString(3, check.getH1());
@@ -22,22 +22,22 @@ public class UrlChecksRepository extends BaseRepository {
             preparedStatement.setString(5, check.getDescription());
             preparedStatement.setTimestamp(6, datetime);
             preparedStatement.executeUpdate();
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                check.setId(generatedKeys.getLong(1));
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet.next()) {
+                check.setId(resultSet.getLong(1));
                 check.setCreatedAt(datetime);
             } else {
-                throw new SQLException("DB have not returned an id after saving an entity");
+                throw new SQLException("Save error");
             }
         }
     }
 
     public static List<UrlCheck> findByUrlId(long urlId) throws SQLException {
         String sql = "SELECT * FROM url_checks WHERE url_id = ? ORDER BY id DESC";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setLong(1, urlId);
-            ResultSet resultSet = stmt.executeQuery();
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setLong(1, urlId);
+            ResultSet resultSet = preparedStatement.executeQuery();
             ArrayList<UrlCheck> result = new ArrayList<>();
             while (resultSet.next()) {
                 long id = resultSet.getLong("id");
@@ -46,11 +46,11 @@ public class UrlChecksRepository extends BaseRepository {
                 String h1 = resultSet.getString("h1");
                 String description = resultSet.getString("description");
                 Timestamp createdAt = resultSet.getTimestamp("created_at");
-                UrlCheck check = new UrlCheck(statusCode, title, h1, description);
-                check.setId(id);
-                check.setUrlId(urlId);
-                check.setCreatedAt(createdAt);
-                result.add(check);
+                UrlCheck urlCheck = new UrlCheck(statusCode, title, h1, description);
+                urlCheck.setId(id);
+                urlCheck.setUrlId(urlId);
+                urlCheck.setCreatedAt(createdAt);
+                result.add(urlCheck);
             }
             return result;
         }
@@ -58,9 +58,9 @@ public class UrlChecksRepository extends BaseRepository {
 
     public static Map<Long, UrlCheck> findLatestChecks() throws SQLException {
         String sql = "SELECT DISTINCT ON (url_id) * from url_checks order by url_id DESC, id DESC";
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            ResultSet resultSet = stmt.executeQuery();
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
             HashMap<Long, UrlCheck> result = new HashMap<Long, UrlCheck>();
             while (resultSet.next()) {
                 long id = resultSet.getLong("id");
@@ -70,11 +70,11 @@ public class UrlChecksRepository extends BaseRepository {
                 String h1 = resultSet.getString("h1");
                 String description = resultSet.getString("description");
                 Timestamp createdAt = resultSet.getTimestamp("created_at");
-                UrlCheck check = new UrlCheck(statusCode, title, h1, description);
-                check.setId(id);
-                check.setUrlId(urlId);
-                check.setCreatedAt(createdAt);
-                result.put(urlId, check);
+                UrlCheck urlCheck = new UrlCheck(statusCode, title, h1, description);
+                urlCheck.setId(id);
+                urlCheck.setUrlId(urlId);
+                urlCheck.setCreatedAt(createdAt);
+                result.put(urlId, urlCheck);
             }
             return result;
         }

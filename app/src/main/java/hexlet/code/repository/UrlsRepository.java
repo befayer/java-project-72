@@ -11,8 +11,8 @@ public class UrlsRepository extends BaseRepository {
     public static void save(Url url) throws SQLException {
         String sql = "INSERT INTO urls (name, created_at) VALUES (?, ?)";
         Timestamp datetime = new Timestamp(System.currentTimeMillis());
-        try (Connection conn = dataSource.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, url.getName());
             preparedStatement.setTimestamp(2, datetime);
             preparedStatement.executeUpdate();
@@ -21,7 +21,7 @@ public class UrlsRepository extends BaseRepository {
                 url.setId(generatedKeys.getLong(1));
                 url.setCreatedAt(datetime);
             } else {
-                throw new SQLException("DB have not returned an id after saving an entity");
+                throw new SQLException("Save error");
             }
         }
     }

@@ -6,9 +6,6 @@ import lombok.ToString;
 
 import java.sql.Timestamp;
 
-/**
- * Url entity.
- */
 @Getter
 @Setter
 @ToString
