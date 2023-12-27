@@ -27,7 +27,7 @@ public final class App {
 
     // Метод для получения порта приложения из переменной окружения
     private static int getPort() {
-        String port = System.getenv().getOrDefault("PORT", "7070");
+        String port = System.getenv().getOrDefault("PORT", "3000");
         return Integer.parseInt(port);
     }
 
