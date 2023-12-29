@@ -1,33 +1,45 @@
-.DEFAULT_GOAL := build-run
+ci:
+	docker-compose -f docker-compose.yml run app make setup
+	docker-compose -f docker-compose.yml up --abort-on-container-exit
 
-clean:
-	make -C app clean
+compose-setup: compose-build compose-app-setup
 
-build:
-	make -C app build
+compose-build:
+	docker-compose build
 
-install:
-	make -C app install
+compose-app-setup:
+	docker-compose run --rm app make setup
 
-run-dist:
-	make -C run-dist
+compose-bash:
+	docker-compose run --rm --service-ports app bash
 
-run:
-	make -C app run
+compose-lint:
+	docker-compose run --rm app make lint
+
+compose-test:
+	docker-compose -f docker-compose.yml up --abort-on-container-exit
+
+compose:
+	docker-compose up
+
+compose-down:
+	docker-compose down -v --remove-orphans
+
+setup:
+	cd code/app && ./gradlew clean build
+	./gradlew clean compileTest
 
 test:
-	make -C app test
-
-report:
-	make -C app report
+	./gradlew test
 
 lint:
-	make -C app lint
+	./gradlew checkstyleTest checkCode
 
-update-deps:
-	make -C app update-deps
+code-start:
+	make/app -C code start
 
+check-java-deps:
+	./gradlew dependencyUpdates -Drevision=release
 
-build-run: build run
-
-.PHONY: build
+deploy:
+	git subtree push --prefix code heroku main
