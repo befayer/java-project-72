@@ -42,6 +42,10 @@ public final class App {
         return System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project");
     }
 
+    public static boolean isProduction() {
+        return System.getenv().getOrDefault("APP_ENV", "dev").equals("prod");
+    }
+
     // Метод для получения пароля для доступа к базе данных из переменной окружения
     private static String getDatabasePassword() {
         return System.getenv("JDBC_DATABASE_PASSWORD");
@@ -55,8 +59,18 @@ public final class App {
     // Метод для инициализации Javalin приложения
     public static Javalin getApp() throws IOException, SQLException {
         HikariConfig hikariConfig = new HikariConfig();
+
         hikariConfig.setJdbcUrl(getDatabaseUrl());
+
+        if (isProduction()) {
+            var username = System.getenv("JDBC_DATABASE_USERNAME");
+            var password = System.getenv("JDBC_DATABASE_PASSWORD");
+            hikariConfig.setUsername(username);
+            hikariConfig.setPassword(password);
+        }
+
         HikariDataSource dataSource = new HikariDataSource(hikariConfig);
+
         String sql = readResourceFile();
         log.info(sql);
 
