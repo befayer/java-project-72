@@ -1,45 +1,17 @@
-ci:
-	docker-compose -f docker-compose.yml run app make setup
-	docker-compose -f docker-compose.yml up --abort-on-container-exit
+run-dist:
+	make -C run-dist
 
-compose-setup: compose-build compose-app-setup
+build:
+	make -C app build
 
-compose-build:
-	docker-compose build
-
-compose-app-setup:
-	docker-compose run --rm app make setup
-
-compose-bash:
-	docker-compose run --rm --service-ports app bash
-
-compose-lint:
-	docker-compose run --rm app make lint
-
-compose-test:
-	docker-compose -f docker-compose.yml up --abort-on-container-exit
-
-compose:
-	docker-compose up
-
-compose-down:
-	docker-compose down -v --remove-orphans
-
-setup:
-	cd code/app && ./gradlew clean build
-	./gradlew clean compileTest
+clean:
+	make -C app clean
 
 test:
-	./gradlew test
+	make -C app test
+
+report:
+	make -C app report
 
 lint:
-	./gradlew checkstyleTest checkCode
-
-code-start:
-	make/app -C code start
-
-check-java-deps:
-	./gradlew dependencyUpdates -Drevision=release
-
-deploy:
-	git subtree push --prefix code heroku main
+	make -C app lint

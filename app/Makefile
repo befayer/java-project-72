@@ -1,26 +1,14 @@
-setup:
-	gradle wrapper --gradle-version 8.2
+run-dist:
+	./build/install/app/bin/app
+
+start:
+	./gradlew run
+
+build:
+	./gradlew build
 
 clean:
 	./gradlew clean
-
-build:
-	./gradlew clean build
-
-start:
-	APP_ENV=development ./gradlew run
-
-install:
-	./gradlew install
-
-start-dist:
-	APP_ENV=production ./build/install/app/bin/app
-
-generate-migrations:
-	./gradlew generateMigrations
-
-lint:
-	./gradlew checkstyleMain checkstyleTest
 
 test:
 	./gradlew test
@@ -28,7 +16,9 @@ test:
 report:
 	./gradlew jacocoTestReport
 
-check-updates:
-	./gradlew dependencyUpdates
+lint:
+	./gradlew checkstyleMain checkstyleTest
+
+build-run: build run
 
 .PHONY: build
