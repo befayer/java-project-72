@@ -16,7 +16,7 @@ RUN mv gradle-${GRADLE_VERSION} ${GRADLE_HOME}
 ENV PATH=$PATH:$GRADLE_HOME/bin
 
 WORKDIR /project
-RUN mkdir /project/code
+RUN mkdir /project/
 
 ENV GRADLE_USER_HOME /project/.gradle
 
