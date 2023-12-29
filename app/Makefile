@@ -1,5 +1,5 @@
 setup:
-	gradle wrapper --gradle-version 8.2
+	gradle wrapper --gradle-version 7.4
 
 clean:
 	./gradlew clean
@@ -8,13 +8,13 @@ build:
 	./gradlew clean build
 
 start:
-	APP_ENV=dev ./gradlew run
+	APP_ENV=development ./gradlew run
 
 install:
 	./gradlew install
 
 start-dist:
-	APP_ENV=prod ./build/install/app/bin/app
+	APP_ENV=production ./build/install/app/bin/app
 
 generate-migrations:
 	./gradlew generateMigrations

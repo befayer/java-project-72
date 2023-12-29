@@ -43,7 +43,7 @@ public final class App {
     }
 
     public static boolean isProduction() {
-        return System.getenv().getOrDefault("APP_ENV", "dev").equals("prod");
+        return System.getenv().getOrDefault("APP_ENV", "development").equals("production");
     }
 
     // Метод для получения пароля для доступа к базе данных из переменной окружения

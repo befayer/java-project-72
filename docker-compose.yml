@@ -7,8 +7,6 @@ services:
     image: postgres:13.4-alpine
     environment:
       POSTGRES_PASSWORD: password
-    volumes:
-      - pgdata:/var/lib/postgresql/data
 
   app:
     build: .
@@ -22,6 +20,3 @@ services:
       JDBC_DATABASE_USERNAME: postgres
       JDBC_DATABASE_PASSWORD: password
       JDBC_DATABASE_NAME: postgres
-
-volumes:
-  pgdata:
