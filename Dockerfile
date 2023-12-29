@@ -1,9 +1,8 @@
-# NOTE: No official gradle image with jdk20
 FROM eclipse-temurin:20-jdk
 
-ARG GRADLE_VERSION=8.3
+ARG GRADLE_VERSION=8.2
 
-RUN apt-get update && apt-get install -yq make unzip
+RUN apt-get update && apt-get install -yq unzip
 
 RUN wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip \
     && unzip gradle-${GRADLE_VERSION}-bin.zip \
@@ -15,9 +14,10 @@ RUN mv gradle-${GRADLE_VERSION} ${GRADLE_HOME}
 
 ENV PATH=$PATH:$GRADLE_HOME/bin
 
-WORKDIR /project
-RUN mkdir /project/code
+WORKDIR /app
 
-ENV GRADLE_USER_HOME /project/.gradle
+COPY /app .
 
-COPY . .
+RUN gradle installDist
+
+CMD ./build/install/java-javalin-blog/bin/java-javalin-blog
